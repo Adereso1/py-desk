@@ -19,7 +19,7 @@ class AuthTestCase(unittest.TestCase):
 
         client = DeskClient(self.TEST_TOKEN)
         response_mock.status_code = 401
-        self.assertRaises(DeskAuthorizationError, lambda: client.ping())
+        self.assertRaises(DeskAuthorizationError, client.ping)
 
         response_mock.status_code = 200
         response = client.ping()

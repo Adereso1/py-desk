@@ -1,12 +1,17 @@
 import requests
 
 
+class DeskAuthorizationError(Exception):
+    pass
+
+
 def add_auth_headers(headers: dict, token: str):
     headers['Authorization'] = f'Key {token}'
 
 
-class DeskAuthorizationError(Exception):
-    pass
+def check_response_errors(response):
+    if response.status_code == 401:
+        raise DeskAuthorizationError()
 
 
 class DeskClient:
@@ -14,13 +19,13 @@ class DeskClient:
     BASE_URL_PROD = 'https://api-cluster.postcenter.io'
 
     def __init__(self, api_token=None, base_url=None):
+        """
+        :param api_token: Desk's API Token
+        :param base_url: Desk's API environment base URL
+        """
         self.api_token = api_token
         if base_url is None:
             self.base_url = self.BASE_URL_PROD
-
-    def __check_response_errors(self, response):
-        if response.status_code == 401:
-            raise DeskAuthorizationError()
 
     def __desk_request(
             self, method: str, path: str,
@@ -32,7 +37,7 @@ class DeskClient:
 
         url = f'{self.base_url}/{path}/'
         response = requests.request(method, url, params=params, headers=headers)
-        self.__check_response_errors(response)
+        check_response_errors(response)
         return response
 
     def __get_request(
