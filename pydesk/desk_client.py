@@ -1,4 +1,5 @@
-from typing import List
+from enum import Enum
+from typing import List, Dict
 
 import requests
 
@@ -14,6 +15,11 @@ def add_auth_headers(headers: dict, token: str):
 def check_response_errors(response):
     if response.status_code == 401:
         raise DeskAuthorizationError()
+
+
+class DeskEntityType(str, Enum):
+    client = 'client'
+    ticket = 'ticket'
 
 
 class DeskClient:
@@ -53,7 +59,13 @@ class DeskClient:
             self, path: str, body: dict,
             params: dict = None, headers: dict = None
     ):
-        return self.__desk_request('post', path, params,body, headers)
+        return self.__desk_request('post', path, params, body, headers)
+
+    def __put_request(
+            self, path: str, body: dict,
+            params: dict = None, headers: dict = None
+    ):
+        return self.__desk_request('put', path, params, body, headers)
 
     def ping(self):
         response = self.__get_request('v2/ping')
@@ -81,4 +93,17 @@ class DeskClient:
             'close_ticket': close_ticket,
             'header': header
         })
+        return response.json()
+
+    def put_metadata(
+            self, entity: DeskEntityType, entity_id: str,
+            metadata: Dict[str, str]
+    ):
+        response = self.__put_request(
+            f'v2/metadata/{entity}/{entity_id}', metadata
+        )
+        return response.json()
+
+    def get_ticket(self, ticket_id: str):
+        response = self.__get_request(f'v2/ticket/{ticket_id}')
         return response.json()
