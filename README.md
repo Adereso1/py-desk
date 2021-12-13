@@ -2,3 +2,4 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/1bc58d7c35e046cea58beff56199305a)](https://www.codacy.com/gh/Adereso1/py-desk/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Adereso1/py-desk&amp;utm_campaign=Badge_Grade)
 [![Build](https://app.travis-ci.com/Adereso1/py-desk.svg?branch=main)](https://app.travis-ci.com/Adereso1/py-desk.svg?branch=main)
+[![codecov](https://codecov.io/gh/Adereso1/py-desk/branch/main/graph/badge.svg?token=S11VQSWJWV)](https://codecov.io/gh/Adereso1/py-desk)
