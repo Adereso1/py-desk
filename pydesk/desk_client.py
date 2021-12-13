@@ -1,3 +1,5 @@
+from typing import List
+
 import requests
 
 
@@ -28,23 +30,55 @@ class DeskClient:
             self.base_url = self.BASE_URL_PROD
 
     def __desk_request(
-            self, method: str, path: str,
-            params: dict = None, headers: dict = None
+            self, method: str, path: str, params: dict = None,
+            body: dict = None, headers: dict = None
     ):
         if headers is None:
             headers = {}
         add_auth_headers(headers, self.api_token)
 
         url = f'{self.base_url}/{path}/'
-        response = requests.request(method, url, params=params, headers=headers)
+        response = requests.request(
+            method, url, json=body, params=params, headers=headers
+        )
         check_response_errors(response)
         return response
 
     def __get_request(
             self, path: str, params: dict = None, headers: dict = None
     ):
-        return self.__desk_request('get', path, params, headers)
+        return self.__desk_request('get', path, params, headers=headers)
+
+    def __post_request(
+            self, path: str, body: dict,
+            params: dict = None, headers: dict = None
+    ):
+        return self.__desk_request('post', path, params,body, headers)
 
     def ping(self):
         response = self.__get_request('v2/ping')
         return response.json()['message']
+
+    def accounts(self):
+        response = self.__get_request('v2/accounts/all')
+        return response.json()['accounts']
+
+    def agents(self):
+        response = self.__get_request('v2/agents')
+        return response.json()['agents']
+
+    def send_hsm(
+            self, sender: str, recipient: str, template: str,
+            parameters: List[str],
+            close_ticket: bool = False,
+            header: dict = None
+    ):
+        response = self.__post_request('v2/message/hsm', {
+            'account': sender,
+            'phone': recipient,
+            'name': template,
+            'parameters': parameters,
+            'close_ticket': close_ticket,
+            'header': header
+        })
+        return response.json()
