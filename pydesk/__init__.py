@@ -1,6 +1,4 @@
-from pydesk.desk_client import DeskClient
+from pydesk.desk_client import DeskClient, DeskAuthorizationError
 
 
-__all__ = [
-    'DeskClient'
-]
+__all__ = ["DeskClient", "DeskAuthorizationError"]
