@@ -1,3 +1,4 @@
+from email.mime import base
 from enum import Enum
 from typing import List, Dict
 
@@ -34,6 +35,8 @@ class DeskClient:
         self.api_token = api_token
         if base_url is None:
             self.base_url = self.BASE_URL_PROD
+        else:
+            self.base_url = base_url
 
     def __desk_request(
         self,
