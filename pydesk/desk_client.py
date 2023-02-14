@@ -1,6 +1,5 @@
-from email.mime import base
 from enum import Enum
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 import requests
 
@@ -19,8 +18,8 @@ def check_response_errors(response):
 
 
 class DeskEntityType(str, Enum):
-    client = "client"
-    ticket = "ticket"
+    CLIENT = "client"
+    TICKET = "ticket"
 
 
 class DeskClient:
@@ -52,7 +51,7 @@ class DeskClient:
 
         url = f"{self.base_url}/{path}/"
         response = requests.request(
-            method, url, json=body, params=params, headers=headers
+            method, url, json=body, params=params, headers=headers, timeout=30
         )
         check_response_errors(response)
         return response
@@ -110,20 +109,37 @@ class DeskClient:
         recipient: str,
         template: str,
         parameters: List[str],
+        campaign_id: Optional[str] = None,
+        entry_id: Optional[str] = None,
         close_ticket: bool = False,
         header: dict = None,
     ):
-        response = self.__post_request(
-            "v2/message/hsm",
-            {
-                "account": sender,
-                "phone": recipient,
-                "name": template,
-                "parameters": parameters,
-                "close_ticket": close_ticket,
-                "header": header,
-            },
-        )
+        if campaign_id and entry_id:
+            response = self.__post_request(
+                "v2/message/hsm",
+                {
+                    "account": sender,
+                    "phone": recipient,
+                    "name": template,
+                    "parameters": parameters,
+                    "campaing_id": campaign_id,
+                    "entry_id": entry_id,
+                    "close_ticket": close_ticket,
+                    "header": header,
+                },
+            )
+        else:
+            response = self.__post_request(
+                "v2/message/hsm",
+                {
+                    "account": sender,
+                    "phone": recipient,
+                    "name": template,
+                    "parameters": parameters,
+                    "close_ticket": close_ticket,
+                    "header": header,
+                },
+            )
         return response
 
     def put_metadata(
