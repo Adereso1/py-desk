@@ -1,4 +1,5 @@
 from enum import Enum
+from http import client
 from typing import List, Dict, Optional
 
 import requests
@@ -18,8 +19,8 @@ def check_response_errors(response):
 
 
 class DeskEntityType(str, Enum):
-    CLIENT = "client"
-    TICKET = "ticket"
+    client = "client"
+    ticket = "ticket"
 
 
 class DeskClient:
