@@ -1,5 +1,4 @@
 from enum import Enum
-from http import client
 from typing import List, Dict, Optional
 
 import requests
