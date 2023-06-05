@@ -122,7 +122,7 @@ class DeskClient:
                     "phone": recipient,
                     "name": template,
                     "parameters": parameters,
-                    "campaing_id": campaign_id,
+                    "campaign_id": campaign_id,
                     "entry_id": entry_id,
                     "close_ticket": close_ticket,
                     "header": header,
